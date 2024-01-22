@@ -32,30 +32,15 @@
 $ yarn install
 ```
 
-## Running the app
+## Running the command
 
 ```bash
 # development
-$ yarn run start
+$ yarn build
 
 # watch mode
-$ yarn run start:dev
+$ yarn command bull
 
-# production mode
-$ yarn run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
 ```
 
 ## Support
