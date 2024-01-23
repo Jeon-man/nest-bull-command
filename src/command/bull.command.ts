@@ -1,4 +1,6 @@
+import { InjectQueue } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
+import { Queue } from 'bullmq';
 import { Command, CommandRunner, RootCommand } from 'nest-commander';
 
 @RootCommand({
@@ -7,7 +9,7 @@ import { Command, CommandRunner, RootCommand } from 'nest-commander';
   description: 'bull manage root command',
 })
 export class BullRootCommand extends CommandRunner {
-  constructor() {
+  constructor(@InjectQueue('event') private readonly eventQueue: Queue) {
     super();
   }
 
@@ -15,6 +17,8 @@ export class BullRootCommand extends CommandRunner {
     passedParams: string[],
     options?: Record<string, any>,
   ): Promise<void> {
-    Logger.log('Bull manage root command', { passedParams, options });
+    Logger.log('Bull manage root command', {
+      state: !(await this.eventQueue.isPaused()),
+    });
   }
 }

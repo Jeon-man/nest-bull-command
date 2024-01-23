@@ -13,7 +13,7 @@ export class BullConfigService implements SharedBullConfigurationFactory {
         host: this.config.get('QUEUE_REDIS_HOST'),
         port: this.config.get('QUEUE_REDIS_PORT'),
       },
-      prefix: this.config.get('QUEUE_PREFIX'),
+      prefix: 'bull:',
     };
   }
 }
