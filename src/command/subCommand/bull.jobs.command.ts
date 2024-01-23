@@ -30,12 +30,21 @@ export class BullJobCommand extends CommandRunner {
   ): Promise<void> {
     Logger.log('job manage command', { passedParams, options });
 
-    if (options.all) {
-      const jobs = await this.eventQueue.getJobs();
-      Logger.log('Show all bull jobs');
-      await this.makeJobResponse(jobs);
-
+    if (Object.keys(options).length > 1) {
+      Logger.error('You must use only one option.');
       return;
+    }
+
+    for (const key in options) {
+      switch (key) {
+        case 'all':
+          const jobs = await this.eventQueue.getJobs();
+          Logger.log('Show all bull jobs');
+          await this.makeJobResponse(jobs);
+          break;
+        default:
+          console.log('Unknown command');
+      }
     }
   }
 
