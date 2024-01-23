@@ -35,8 +35,9 @@ export class BullJobCommand extends CommandRunner {
     const result = await Promise.all(
       jobs.map(
         async (job) =>
-          `--------------------------------------------------
-job id: ${job.id} (${await job.getState()})
+          `--------------------------------------------------\njob id: ${
+            job.id
+          } (${await job.getState()})
 ${
   job.failedReason
     ? `\n - reason: ${formatText(
