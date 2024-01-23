@@ -76,6 +76,17 @@ ${
           Logger.log('Show all failed job');
           await this.makeJobResponse(failedJobs);
           break;
+        case 'retry':
+          const job = await this.eventQueue.getJob(options[key]);
+          if (!job) {
+            Logger.error('Not Found Job');
+            break;
+          }
+          if ((await job.getState()) !== 'failed') {
+            Logger.error('You must retry only failed jobs');
+            break;
+          }
+          await job.retry();
         default:
           console.log('Unknown command');
       }
@@ -98,5 +109,14 @@ ${
   })
   parseFailed() {
     return true;
+  }
+
+  @Option({
+    name: 'retry <jobId>',
+    flags: '-r, --retry',
+    description: 'Retry on fail job',
+  })
+  parseJobId(jobId: string) {
+    return jobId;
   }
 }
