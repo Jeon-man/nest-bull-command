@@ -13,25 +13,25 @@ export class BullJobCommand extends CommandRunner {
     super();
   }
 
-  private formatText(input: string, maxLineLength: number): string {
-    const words = input.split(' ');
-    let lineLength = 0;
-    let result = '';
+  private async makeJobResponse(jobs: Job<any, any, string>[]) {
+    function formatText(input: string, maxLineLength: number): string {
+      const words = input.split(' ');
+      let lineLength = 0;
+      let result = '';
 
-    for (const word of words) {
-      if (lineLength + word.length > maxLineLength) {
-        result += '\n';
-        lineLength = 0;
+      for (const word of words) {
+        if (lineLength + word.length > maxLineLength) {
+          result += '\n';
+          lineLength = 0;
+        }
+
+        result += word + ' ';
+        lineLength += word.length + 1;
       }
 
-      result += word + ' ';
-      lineLength += word.length + 1;
+      return result;
     }
 
-    return result;
-  }
-
-  private async makeJobResponse(jobs: Job<any, any, string>[]) {
     const result = await Promise.all(
       jobs.map(
         async (job) =>
@@ -39,10 +39,10 @@ export class BullJobCommand extends CommandRunner {
 job id: ${job.id} (${await job.getState()})
 ${
   job.failedReason
-    ? `\n - reason: ${this.formatText(
+    ? `\n - reason: ${formatText(
         job.failedReason,
         50,
-      )}\n - stacktrace: ${this.formatText(job.stacktrace[0], 50)} `
+      )}\n - stacktrace: ${formatText(job.stacktrace[0], 50)} `
     : ``
 }
 --------------------------------------------------\n**************************************************\n`,
