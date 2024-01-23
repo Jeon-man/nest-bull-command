@@ -1,6 +1,6 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Logger } from '@nestjs/common';
-import { Queue } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { CommandRunner, Option, SubCommand } from 'nest-commander';
 
 @SubCommand({
@@ -13,6 +13,17 @@ export class BullJobCommand extends CommandRunner {
     super();
   }
 
+  private async makeJobResponse(jobs: Job<any, any, string>[]) {
+    const result = await Promise.all(
+      jobs.map(
+        async (job) =>
+          `job: ${job.id}, name: ${job.name}, status: ${await job.getState()}`,
+      ),
+    );
+
+    Logger.log('\n' + result.join('\n'));
+  }
+
   async run(
     passedParams: string[],
     options: Record<string, any>,
@@ -21,17 +32,9 @@ export class BullJobCommand extends CommandRunner {
 
     if (options.all) {
       const jobs = await this.eventQueue.getJobs();
+      Logger.log('Show all bull jobs');
+      await this.makeJobResponse(jobs);
 
-      const result = await Promise.all(
-        jobs.map(
-          async (job) =>
-            `job: ${job.id}, name: ${
-              job.name
-            }, status: ${await job.getState()}`,
-        ),
-      );
-
-      Logger.log('\n' + result.join('\n'));
       return;
     }
   }
