@@ -4,6 +4,6 @@ import { BullModule } from 'src/bull/bull.module';
 
 @Module({
   imports: [BullModule],
-  providers: [BullRootCommand],
+  providers: [...BullRootCommand.registerWithSubCommands()],
 })
 export class BullCommandModule {}
