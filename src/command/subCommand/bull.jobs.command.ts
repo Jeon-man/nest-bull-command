@@ -14,6 +14,11 @@ export class BullJobCommand extends CommandRunner {
   }
 
   private async makeJobResponse(jobs: Job<any, any, string>[]) {
+    if (jobs.length === 0) {
+      Logger.log('Not Found Jobs');
+      return;
+    }
+
     function formatText(input: string, maxLineLength: number): string {
       const words = input.split(' ');
       let lineLength = 0;
@@ -112,8 +117,8 @@ ${
   }
 
   @Option({
-    name: 'retry <jobId>',
-    flags: '-r, --retry',
+    name: 'retry',
+    flags: '-r, --retry <jobId>',
     description: 'Retry on fail job',
   })
   parseJobId(jobId: string) {
