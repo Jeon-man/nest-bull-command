@@ -34,12 +34,21 @@ $ yarn install
 
 ## Running the command
 
+### <span style="background-color:#fff5b1"> [You must build before the first run.](#running-the-command) </span>
+
 ```bash
-# development
+# Build command
 $ yarn build
 
-# watch mode
-$ yarn command bull
+# Show command help
+# Like 'node dist/main bull'
+$ yarn command bull -h
+
+
+# Show bull job options
+# Like 'node dist/main bull job -h'
+$ yarn command bull job -h
+#
 
 ```
 
